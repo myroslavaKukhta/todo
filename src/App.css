@@ -1,8 +1,8 @@
-.App {
-  padding: 30px;
-  display: flex;
+nav {
+  width: 100vw;
 }
 
-.App > div {
-  margin-right: 50px;
+body {
+  display: flex;
+  margin: 0 auto;
 }
