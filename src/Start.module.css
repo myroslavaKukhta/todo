@@ -1,0 +1,25 @@
+form {
+    display: flex;
+    background-color: darkseagreen;
+    flex-direction: column;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+label {
+    margin-bottom: 10px;
+}
+
+input {
+    width: 470px;
+    padding: 10px;
+    margin: 4px;
+}
+
+button {
+    background-color: red;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}

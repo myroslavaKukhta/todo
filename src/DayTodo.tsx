@@ -1,6 +1,6 @@
 import React, { ChangeEvent, KeyboardEvent, useState } from 'react';
 import { FilterValuesType } from './App';
-import './DayTodo.css';
+import s from './DayTodo.module.css';
 
 export interface TaskType {
     id: string;
@@ -48,32 +48,35 @@ export const DayTodo: React.FC<DayTodoProps> = ({ title, tasks, addTask, removeT
     };
 
     return (
-        <div className='todo'>
+        <div className={s.todoDay}>
             <h3>{title}</h3>
-            <div>
-                <input
-                    type="text" // Изменено на тип "text"
+            <div className={s.task}>
+                <input className={s.inputTodo}
+                    type="text"
                     value={taskTitle}
                     onChange={onChangeHandler}
                     onKeyPress={onKeyPressHandler}
                 />
-                <button onClick={addTaskHandler}>+</button>
-                <ul className='task-list'>
+                <button onClick={addTaskHandler} className={s.buttonAddTodo}>+</button>
+                <ul className={s.taskList}>
                     {tasks.map((task) => (
-                        <li key={task.id} style={{ color: 'black' }}>
-                            <input
+                        <li key={task.id} className={s.taskLi}>
+                            <div className={s.titleWithCheckbox}> <input
                                 type="checkbox"
                                 checked={task.isDone}
                                 onChange={() => changeTaskStatus(task.id)}
                             />
                             <div>{task.title}</div>
-                            <button onClick={() => removeTask(task.id)}>x</button>
+                        </div>
+                            <button onClick={() => removeTask(task.id)} className={s.buttonRemoveTodo}>x</button>
                         </li>
                     ))}
                 </ul>
-                <button onClick={onAllClickHandler}>All</button>
-                <button onClick={onActiveClickHandler}>Active</button>
-                <button onClick={onCompletedClickHandler}>Completed</button>
+                <div className={s.buttonTrio}>
+                <button onClick={onAllClickHandler} className={s.button}>All</button>
+                <button onClick={onActiveClickHandler} className={s.button}>Active</button>
+                <button onClick={onCompletedClickHandler} className={s.button}>Completed</button>
+                </div>
             </div>
         </div>
     );

@@ -1,25 +1,22 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import './NavBar.css';
+import './NavBar.module.css';
 
 const NavBar = () => {
     return (
         <nav>
             <ul>
                 <li>
-                    <NavLink to="/">
-                        Home
-                    </NavLink>
+                    <NavLink to="/start">Start</NavLink>
                 </li>
                 <li>
-                    <NavLink to="/day">
-                        Day
-                    </NavLink>
+                    <NavLink to="/home">Home</NavLink>
                 </li>
                 <li>
-                    <NavLink to="/week">
-                        Week
-                    </NavLink>
+                    <NavLink to="/week">Week</NavLink>
+                </li>
+                <li>
+                    <NavLink to="/day">Day</NavLink>
                 </li>
             </ul>
         </nav>

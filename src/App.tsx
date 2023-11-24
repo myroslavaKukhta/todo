@@ -1,25 +1,26 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { v1 } from 'uuid';
-import './App.css';
 import NavBar from './NavBar';
 import { DayTodo } from './DayTodo';
 import { WeekTodo } from './WeekTodo';
-import {Home} from "./Home";
+import { Start } from './Start';
+import { Home } from './Home';
 
 export type FilterValuesType = 'all' | 'active' | 'completed';
 
-
+interface Task {
+    id: string;
+    title: string;
+    isDone: boolean;
+}
 
 function App() {
-    let [tasks, setTasks] = useState([
-        { id: v1(), title: 'Study', isDone: false },
-        { id: v1(), title: 'JS', isDone: true },
-        { id: v1(), title: 'ReactJS', isDone: false },
-    ]);
+    const [isRegistered, setIsRegistered] = useState(false);
+    const [tasks, setTasks] = useState<Task[]>([]);
 
     let [filter, setFilter] = useState<FilterValuesType>('all');
-    let tasksForTodoList = tasks;
+    let tasksForTodoList: Task[] = tasks;
 
     if (filter === 'active') {
         tasksForTodoList = tasks.filter((task) => !task.isDone);
@@ -29,27 +30,29 @@ function App() {
         tasksForTodoList = tasks.filter((task) => task.isDone);
     }
 
-    function addTask(title: string) {
-        let task = { id: v1(), title: title, isDone: false };
+    const addTask = (title: string) => {
+        let task: Task = { id: v1(), title: title, isDone: false };
         let newTasks = [task, ...tasks];
         setTasks(newTasks);
-    }
+    };
 
-    function removeTask(id: string) {
+    const removeTask = (id: string) => {
         let filteredTasks = tasks.filter((task) => task.id !== id);
         setTasks(filteredTasks);
-    }
+    };
 
-    function changeFilter(value: FilterValuesType) {
+    const changeFilter = (value: FilterValuesType) => {
         setFilter(value);
-    }
+    };
 
     const changeTaskStatus = (taskId: string) => {
         setTasks((prevTasks) =>
-            prevTasks.map((task) =>
-                task.id === taskId ? { ...task, isDone: !task.isDone } : task
-            )
+            prevTasks.map((task) => (task.id === taskId ? { ...task, isDone: !task.isDone } : task))
         );
+    };
+
+    const handleRegistration = () => {
+        setIsRegistered(true);
     };
 
     return (
@@ -57,33 +60,41 @@ function App() {
             <div className="App">
                 <NavBar />
                 <Routes>
-                    <Route path="/" element={<Home />} />
                     <Route
-                        path="/week"
-                        element={
-                            <WeekTodo
-                                title="What to do this week"
-                                tasks={tasksForTodoList}
-                                addTask={addTask}
-                                removeTask={removeTask}
-                                changeFilter={changeFilter}
-                                changeTaskStatus={changeTaskStatus}
-                            />
-                        }
+                        path="/start"
+                        element={<Start handleRegistration={handleRegistration} isRegistered={isRegistered} />}
                     />
-                    <Route
-                        path="/day"
-                        element={
-                            <DayTodo
-                                title="What to do"
-                                tasks={tasksForTodoList}
-                                addTask={addTask}
-                                removeTask={removeTask}
-                                changeFilter={changeFilter}
-                                changeTaskStatus={changeTaskStatus}
+                    {isRegistered && (
+                        <>
+                            <Route path="/home" element={<Home />} />
+                            <Route
+                                path="/week"
+                                element={
+                                    <WeekTodo
+                                        title="What to do this week"
+                                        tasks={tasksForTodoList}
+                                        addTask={addTask}
+                                        removeTask={removeTask}
+                                        changeFilter={changeFilter}
+                                        changeTaskStatus={changeTaskStatus}
+                                    />
+                                }
                             />
-                        }
-                    />
+                            <Route
+                                path="/day"
+                                element={
+                                    <DayTodo
+                                        title="What to do"
+                                        tasks={tasksForTodoList}
+                                        addTask={addTask}
+                                        removeTask={removeTask}
+                                        changeFilter={changeFilter}
+                                        changeTaskStatus={changeTaskStatus}
+                                    />
+                                }
+                            />
+                        </>
+                    )}
                 </Routes>
             </div>
         </Router>
