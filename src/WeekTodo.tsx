@@ -1,6 +1,7 @@
-import React, { useState, ChangeEvent, KeyboardEvent } from 'react';
-import { DayTodo, TaskType } from "./DayTodo";
+import React from 'react';
+import { DayTodo, TaskType } from './DayTodo';
 import { FilterValuesType } from './App';
+import { saveDataToLocalStorage, loadDataFromLocalStorage } from './localStorageUtils'; // Імпорт функцій
 
 interface WeekTodoProps {
     title: string;
@@ -11,10 +12,19 @@ interface WeekTodoProps {
     changeTaskStatus: (taskId: string) => void;
 }
 
-export const WeekTodo: React.FC<WeekTodoProps> = ({ title, tasks, addTask, removeTask, changeFilter, changeTaskStatus }) => {
+export const WeekTodo: React.FC<WeekTodoProps> = ({ title, tasks, addTask, removeTask, changeFilter, changeTaskStatus, }) => {
     const days: string[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-    const [dailyTasks, setDailyTasks] = useState<{ [key: string]: TaskType[] }>({});
+    const [dailyTasks, setDailyTasks] = React.useState<{ [key: string]: TaskType[] }>({});
+
+    React.useEffect(() => {
+        // Завантаження даних при монтажі компонента
+        const savedData = loadDataFromLocalStorage('dailyTasks');
+        if (savedData) {
+            // Встановлення збережених даних
+            setDailyTasks(savedData);
+        }
+    }, []);
 
     const addTaskToDay = (day: string, task: string) => {
         setDailyTasks((prevTasks) => ({
@@ -41,7 +51,7 @@ export const WeekTodo: React.FC<WeekTodoProps> = ({ title, tasks, addTask, remov
                         tasks={dailyTasks[day] || []}
                         addTask={(text) => addTaskToDay(day, text)}
                         removeTask={(id) => removeTaskFromDay(day, id)}
-                        changeFilter={changeFilter} // pass the changeFilter function
+                        changeFilter={changeFilter}
                         changeTaskStatus={changeTaskStatus}
                     />
                 ))}

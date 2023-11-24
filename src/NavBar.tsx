@@ -1,11 +1,11 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import './NavBar.module.css';
+import s from './NavBar.module.css';
 
 const NavBar = () => {
     return (
         <nav>
-            <ul>
+            <ul className={s.navList}>
                 <li>
                     <NavLink to="/start">Start</NavLink>
                 </li>

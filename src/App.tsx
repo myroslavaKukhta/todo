@@ -6,6 +6,7 @@ import { DayTodo } from './DayTodo';
 import { WeekTodo } from './WeekTodo';
 import { Start } from './Start';
 import { Home } from './Home';
+import { saveDataToLocalStorage, loadDataFromLocalStorage } from './localStorageUtils';
 
 export type FilterValuesType = 'all' | 'active' | 'completed';
 
@@ -18,8 +19,8 @@ interface Task {
 function App() {
     const [isRegistered, setIsRegistered] = useState(false);
     const [tasks, setTasks] = useState<Task[]>([]);
+    const [filter, setFilter] = useState<FilterValuesType>('all');
 
-    let [filter, setFilter] = useState<FilterValuesType>('all');
     let tasksForTodoList: Task[] = tasks;
 
     if (filter === 'active') {
@@ -34,11 +35,13 @@ function App() {
         let task: Task = { id: v1(), title: title, isDone: false };
         let newTasks = [task, ...tasks];
         setTasks(newTasks);
+        saveDataToLocalStorage('tasks', newTasks);
     };
 
     const removeTask = (id: string) => {
         let filteredTasks = tasks.filter((task) => task.id !== id);
         setTasks(filteredTasks);
+        saveDataToLocalStorage('tasks', filteredTasks);
     };
 
     const changeFilter = (value: FilterValuesType) => {
@@ -49,6 +52,7 @@ function App() {
         setTasks((prevTasks) =>
             prevTasks.map((task) => (task.id === taskId ? { ...task, isDone: !task.isDone } : task))
         );
+        saveDataToLocalStorage('tasks', tasks);
     };
 
     const handleRegistration = () => {
@@ -60,10 +64,7 @@ function App() {
             <div className="App">
                 <NavBar />
                 <Routes>
-                    <Route
-                        path="/start"
-                        element={<Start handleRegistration={handleRegistration} isRegistered={isRegistered} />}
-                    />
+                    <Route path="/start" element={<Start handleRegistration={handleRegistration} isRegistered={isRegistered} />} />
                     {isRegistered && (
                         <>
                             <Route path="/home" element={<Home />} />
