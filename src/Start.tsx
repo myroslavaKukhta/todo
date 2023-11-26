@@ -42,7 +42,7 @@ export const Start: React.FC<StartProps> = ({ handleRegistration, isRegistered }
 
     return (
         <div>
-            <h2>Start</h2>
+            <h2>Hello! You need to be registered before use this secret App</h2>
             <form onSubmit={handleSubmit}>
                 <label>
                     Username:
@@ -58,14 +58,7 @@ export const Start: React.FC<StartProps> = ({ handleRegistration, isRegistered }
                 <br />
                 <label>
                     Email:
-                    <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="Enter email"
-                        required
-                    />
+                    <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter email" required />
                 </label>
                 <br />
                 <label>
@@ -86,3 +79,4 @@ export const Start: React.FC<StartProps> = ({ handleRegistration, isRegistered }
         </div>
     );
 };
+export default Start;

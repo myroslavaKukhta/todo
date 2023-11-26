@@ -1,7 +1,7 @@
 import React from 'react';
 import { DayTodo, TaskType } from './DayTodo';
 import { FilterValuesType } from './App';
-import { saveDataToLocalStorage, loadDataFromLocalStorage } from './localStorageUtils'; // Імпорт функцій
+import { saveDataToLocalStorage, loadDataFromLocalStorage } from './localStorageUtils';
 
 interface WeekTodoProps {
     title: string;
@@ -12,16 +12,21 @@ interface WeekTodoProps {
     changeTaskStatus: (taskId: string) => void;
 }
 
-export const WeekTodo: React.FC<WeekTodoProps> = ({ title, tasks, addTask, removeTask, changeFilter, changeTaskStatus, }) => {
+export const WeekTodo: React.FC<WeekTodoProps> = ({
+                                                      title,
+                                                      tasks,
+                                                      addTask,
+                                                      removeTask,
+                                                      changeFilter,
+                                                      changeTaskStatus,
+                                                  }) => {
     const days: string[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
     const [dailyTasks, setDailyTasks] = React.useState<{ [key: string]: TaskType[] }>({});
 
     React.useEffect(() => {
-        // Завантаження даних при монтажі компонента
         const savedData = loadDataFromLocalStorage('dailyTasks');
         if (savedData) {
-            // Встановлення збережених даних
             setDailyTasks(savedData);
         }
     }, []);
@@ -47,7 +52,7 @@ export const WeekTodo: React.FC<WeekTodoProps> = ({ title, tasks, addTask, remov
                 {days.map((day, index) => (
                     <DayTodo
                         key={index}
-                        title={day} // change 'day' to 'title'
+                        title={day}
                         tasks={dailyTasks[day] || []}
                         addTask={(text) => addTaskToDay(day, text)}
                         removeTask={(id) => removeTaskFromDay(day, id)}
@@ -58,4 +63,4 @@ export const WeekTodo: React.FC<WeekTodoProps> = ({ title, tasks, addTask, remov
             </div>
         </div>
     );
-}
+};

@@ -2,8 +2,6 @@ import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
 import { FilterValuesType } from './App';
 import s from './DayTodo.module.css';
 import { saveDataToLocalStorage, loadDataFromLocalStorage } from './localStorageUtils';
-import { enc, AES } from 'crypto-js';
-import pako from 'pako';
 
 export interface TaskType {
     id: string;
@@ -21,17 +19,17 @@ interface DayTodoProps {
 }
 
 export const DayTodo: React.FC<DayTodoProps> = ({
-                                                    title,
-                                                    tasks,
-                                                    addTask,
-                                                    removeTask,
-                                                    changeFilter,
-                                                    changeTaskStatus,
-                                                }) => {
+                                             title,
+                                             tasks: initialTasks, // Оголошення як initialTasks
+                                             addTask,
+                                             removeTask,
+                                             changeFilter,
+                                             changeTaskStatus,
+                                         }) => {
     const storageKey = 'dayTodoData';
-    const ENCRYPTION_KEY = 'ваш_секретний_ключ';
 
     const [taskTitle, setTaskTitle] = useState<string>('');
+    const [tasks, setTasks] = useState<TaskType[]>(initialTasks); // Використовуємо стан
 
     useEffect(() => {
         const savedData = loadDataFromLocalStorage(storageKey);
@@ -45,6 +43,7 @@ export const DayTodo: React.FC<DayTodoProps> = ({
         const newTask = { id: Date.now().toString(), title: taskTitle, isDone: false };
         const newTasks = [...tasks, newTask];
         saveDataToLocalStorage(storageKey, { tasks: newTasks, title });
+        setTasks(newTasks); // Оновлюємо стан tasks
         setTaskTitle('');
     };
 
@@ -59,17 +58,18 @@ export const DayTodo: React.FC<DayTodoProps> = ({
     };
 
     const encryptAndSaveHandler = () => {
-        const encryptedData = AES.encrypt(
-            JSON.stringify({ tasks, title: taskTitle }),
-            ENCRYPTION_KEY
-        ).toString();
-        const compressedData = pako.gzip(encryptedData, {});
-        // Конвертація Uint8Array у рядок
-        const compressedString = new TextDecoder().decode(compressedData);
-        localStorage.setItem(storageKey, compressedString);
+        saveDataToLocalStorage(storageKey, { tasks, title: taskTitle });
     };
 
+    const loadDataHandler = () => {
+        const savedData = loadDataFromLocalStorage(storageKey);
+        if (savedData && savedData.tasks) {
+            const { title, tasks: loadedTasks } = savedData;
 
+            // Використання setTasks для встановлення завантажених даних
+            setTasks(loadedTasks);
+        }
+    };
 
     const onAllClickHandler = () => {
         changeFilter('all');
@@ -98,7 +98,10 @@ export const DayTodo: React.FC<DayTodoProps> = ({
                     +
                 </button>
                 <button onClick={encryptAndSaveHandler} className={s.button}>
-                    Encrypt & Save
+                    Encrypt & Save Data
+                </button>
+                <button onClick={loadDataHandler} className={s.button}>
+                    Load Data
                 </button>
                 <ul className={s.taskList}>
                     {tasks.map((task) => (

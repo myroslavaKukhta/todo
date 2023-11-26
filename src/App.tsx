@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { v1 } from 'uuid';
-import NavBar from './NavBar';
+import {NavBar} from './NavBar';
 import { DayTodo } from './DayTodo';
 import { WeekTodo } from './WeekTodo';
 import { Start } from './Start';
-import { Home } from './Home';
 import { saveDataToLocalStorage, loadDataFromLocalStorage } from './localStorageUtils';
 
 export type FilterValuesType = 'all' | 'active' | 'completed';
@@ -64,10 +63,12 @@ function App() {
             <div className="App">
                 <NavBar />
                 <Routes>
-                    <Route path="/start" element={<Start handleRegistration={handleRegistration} isRegistered={isRegistered} />} />
+                    <Route
+                        path="/start"
+                        element={<Start handleRegistration={handleRegistration} isRegistered={isRegistered} />}
+                    />
                     {isRegistered && (
                         <>
-                            <Route path="/home" element={<Home />} />
                             <Route
                                 path="/week"
                                 element={
