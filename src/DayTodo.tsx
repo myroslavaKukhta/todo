@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent, KeyboardEvent } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import { FilterValuesType } from './App';
 import s from './DayTodo.module.css';
 import { saveDataToLocalStorage, loadDataFromLocalStorage } from './localStorageUtils';
@@ -18,32 +18,17 @@ interface DayTodoProps {
     changeTaskStatus: (taskId: string) => void;
 }
 
-export const DayTodo: React.FC<DayTodoProps> = ({
-                                             title,
-                                             tasks: initialTasks, // Оголошення як initialTasks
-                                             addTask,
-                                             removeTask,
-                                             changeFilter,
-                                             changeTaskStatus,
-                                         }) => {
+const DayTodo: React.FC<DayTodoProps> = ({ title, tasks, addTask, removeTask, changeFilter, changeTaskStatus }) => {
     const storageKey = 'dayTodoData';
-
     const [taskTitle, setTaskTitle] = useState<string>('');
-    const [tasks, setTasks] = useState<TaskType[]>(initialTasks); // Використовуємо стан
-
-    useEffect(() => {
-        const savedData = loadDataFromLocalStorage(storageKey);
-        if (savedData && savedData.tasks) {
-            setTaskTitle(savedData.tasks.title || '');
-        }
-    }, []);
+    const [tasksState, setTasksState] = useState<TaskType[]>(tasks);
 
     const addTaskHandler = () => {
         addTask(taskTitle);
         const newTask = { id: Date.now().toString(), title: taskTitle, isDone: false };
-        const newTasks = [...tasks, newTask];
-        saveDataToLocalStorage(storageKey, { tasks: newTasks, title });
-        setTasks(newTasks); // Оновлюємо стан tasks
+        const newTasks = [...tasksState, newTask];
+        saveDataToLocalStorage(storageKey, { tasks: newTasks, title: taskTitle });
+        setTasksState(newTasks);
         setTaskTitle('');
     };
 
@@ -51,23 +36,16 @@ export const DayTodo: React.FC<DayTodoProps> = ({
         setTaskTitle(event.currentTarget.value);
     };
 
-    const onKeyPressHandler = (event: KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
-            addTaskHandler();
-        }
-    };
-
     const encryptAndSaveHandler = () => {
-        saveDataToLocalStorage(storageKey, { tasks, title: taskTitle });
+        saveDataToLocalStorage(storageKey, { tasks: tasksState, title: taskTitle });
     };
 
     const loadDataHandler = () => {
         const savedData = loadDataFromLocalStorage(storageKey);
         if (savedData && savedData.tasks) {
             const { title, tasks: loadedTasks } = savedData;
-
-            // Використання setTasks для встановлення завантажених даних
-            setTasks(loadedTasks);
+            setTasksState(loadedTasks);
+            setTaskTitle(title || '');
         }
     };
 
@@ -83,39 +61,42 @@ export const DayTodo: React.FC<DayTodoProps> = ({
         changeFilter('completed');
     };
 
+    const removeTaskHandler = (taskId: string) => {
+        removeTask(taskId);
+        saveDataToLocalStorage(storageKey, { tasks: tasksState, title: taskTitle });
+    };
+
+    const changeTaskStatusHandler = (taskId: string) => {
+        changeTaskStatus(taskId);
+        saveDataToLocalStorage(storageKey, { tasks: tasksState, title: taskTitle });
+    };
+
     return (
         <div className={s.todoDay}>
             <h3>{title}</h3>
             <div className={s.task}>
-                <input
-                    className={s.inputTodo}
-                    type="text"
-                    value={taskTitle}
-                    onChange={onChangeHandler}
-                    onKeyPress={onKeyPressHandler}
-                />
+                <input className={s.inputTodo} type="text" value={taskTitle} onChange={onChangeHandler} />
                 <button onClick={addTaskHandler} className={s.buttonAddTodo}>
                     +
                 </button>
                 <button onClick={encryptAndSaveHandler} className={s.button}>
-                    Encrypt & Save Data
+                    Encrypt & Save
                 </button>
                 <button onClick={loadDataHandler} className={s.button}>
                     Load Data
                 </button>
                 <ul className={s.taskList}>
-                    {tasks.map((task) => (
+                    {tasksState.map((task) => (
                         <li key={task.id} className={s.taskLi}>
                             <div className={s.titleWithCheckbox}>
-                                {' '}
                                 <input
                                     type="checkbox"
                                     checked={task.isDone}
-                                    onChange={() => changeTaskStatus(task.id)}
+                                    onChange={() => changeTaskStatusHandler(task.id)}
                                 />
                                 <div>{task.title}</div>
                             </div>
-                            <button onClick={() => removeTask(task.id)} className={s.buttonRemoveTodo}>
+                            <button onClick={() => removeTaskHandler(task.id)} className={s.buttonRemoveTodo}>
                                 x
                             </button>
                         </li>
@@ -136,3 +117,5 @@ export const DayTodo: React.FC<DayTodoProps> = ({
         </div>
     );
 };
+
+export default DayTodo;

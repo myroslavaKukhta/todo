@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { v1 } from 'uuid';
-import {NavBar} from './NavBar';
-import { DayTodo } from './DayTodo';
-import { WeekTodo } from './WeekTodo';
-import { Start } from './Start';
+import { NavBar } from './NavBar';
+import DayTodo from './DayTodo';
+import WeekTodo from './WeekTodo';
+import Start from './Start';
 import { saveDataToLocalStorage, loadDataFromLocalStorage } from './localStorageUtils';
+import { v1 } from 'uuid';
 
 export type FilterValuesType = 'all' | 'active' | 'completed';
 
@@ -63,10 +63,7 @@ function App() {
             <div className="App">
                 <NavBar />
                 <Routes>
-                    <Route
-                        path="/start"
-                        element={<Start handleRegistration={handleRegistration} isRegistered={isRegistered} />}
-                    />
+                    <Route path="/start" element={<Start handleRegistration={handleRegistration} isRegistered={isRegistered} />} />
                     {isRegistered && (
                         <>
                             <Route
@@ -86,7 +83,7 @@ function App() {
                                 path="/day"
                                 element={
                                     <DayTodo
-                                        title="What to do"
+                                        title="What to do today"
                                         tasks={tasksForTodoList}
                                         addTask={addTask}
                                         removeTask={removeTask}

@@ -1,5 +1,6 @@
-import React from 'react';
-import { DayTodo, TaskType } from './DayTodo';
+import React, { useState, useEffect } from 'react';
+import DayTodo from './DayTodo';
+import { TaskType } from './DayTodo';
 import { FilterValuesType } from './App';
 import { saveDataToLocalStorage, loadDataFromLocalStorage } from './localStorageUtils';
 
@@ -12,19 +13,19 @@ interface WeekTodoProps {
     changeTaskStatus: (taskId: string) => void;
 }
 
-export const WeekTodo: React.FC<WeekTodoProps> = ({
-                                                      title,
-                                                      tasks,
-                                                      addTask,
-                                                      removeTask,
-                                                      changeFilter,
-                                                      changeTaskStatus,
-                                                  }) => {
+const WeekTodo: React.FC<WeekTodoProps> = ({
+                                               title,
+                                               tasks,
+                                               addTask,
+                                               removeTask,
+                                               changeFilter,
+                                               changeTaskStatus,
+                                           }) => {
     const days: string[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-    const [dailyTasks, setDailyTasks] = React.useState<{ [key: string]: TaskType[] }>({});
+    const [dailyTasks, setDailyTasks] = useState<{ [key: string]: TaskType[] }>({});
 
-    React.useEffect(() => {
+    useEffect(() => {
         const savedData = loadDataFromLocalStorage('dailyTasks');
         if (savedData) {
             setDailyTasks(savedData);
@@ -47,11 +48,11 @@ export const WeekTodo: React.FC<WeekTodoProps> = ({
 
     return (
         <div>
-            <h2>Week</h2>
+            <h2>{title}</h2>
             <div className="days-todo">
                 {days.map((day, index) => (
                     <DayTodo
-                        key={index}
+                        key={day}
                         title={day}
                         tasks={dailyTasks[day] || []}
                         addTask={(text) => addTaskToDay(day, text)}
@@ -64,3 +65,5 @@ export const WeekTodo: React.FC<WeekTodoProps> = ({
         </div>
     );
 };
+
+export default WeekTodo;

@@ -6,7 +6,7 @@ interface StartProps {
     isRegistered: boolean;
 }
 
-export const Start: React.FC<StartProps> = ({ handleRegistration, isRegistered }) => {
+const Start: React.FC<StartProps> = ({ handleRegistration, isRegistered }) => {
     const [formData, setFormData] = useState({
         username: '',
         email: '',

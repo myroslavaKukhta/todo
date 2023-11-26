@@ -1,7 +1,7 @@
 import { enc, AES } from 'crypto-js';
 import pako from 'pako';
 
-const ENCRYPTION_KEY = 'fox'; // Замініть на свій секретний ключ
+const ENCRYPTION_KEY = 'fox'; //  секретний ключ
 
 // Зберігання та шифрування даних в локальному сховищі
 export const saveDataToLocalStorage = (key, data) => {
