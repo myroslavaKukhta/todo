@@ -1,12 +1,13 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
-import './Start.module.css';
+import React, {useState, ChangeEvent, FormEvent} from 'react';
+import s from './Start.module.css';
+import samur from './img/samur.jpg'
 
 interface StartProps {
     handleRegistration: () => void;
     isRegistered: boolean;
 }
 
-const Start: React.FC<StartProps> = ({ handleRegistration, isRegistered }) => {
+const Start: React.FC<StartProps> = ({handleRegistration, isRegistered}) => {
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -14,7 +15,7 @@ const Start: React.FC<StartProps> = ({ handleRegistration, isRegistered }) => {
     });
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         setFormData((prevData) => ({
             ...prevData,
             [name]: value,
@@ -37,12 +38,21 @@ const Start: React.FC<StartProps> = ({ handleRegistration, isRegistered }) => {
     };
 
     if (isRegistered) {
-        return <p>You are already registered!</p>;
+        return <>
+            <div className={s.text}>
+                <h2>You are already registered!</h2>
+                <h3>Go to your tasks!</h3>
+            </div>
+            <img
+                src={samur}
+                alt="samur"
+            />
+        </>
     }
 
     return (
         <div>
-            <h2>Hello! You need to be registered before use this secret App</h2>
+            <h2>Hello! Samurai, you need to be registered before use this App</h2>
             <form onSubmit={handleSubmit}>
                 <label>
                     Username:
@@ -55,12 +65,13 @@ const Start: React.FC<StartProps> = ({ handleRegistration, isRegistered }) => {
                         required
                     />
                 </label>
-                <br />
+                <br/>
                 <label>
                     Email:
-                    <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter email" required />
+                    <input type="email" name="email" value={formData.email} onChange={handleChange}
+                           placeholder="Enter email" required/>
                 </label>
-                <br />
+                <br/>
                 <label>
                     Password:
                     <input
@@ -73,8 +84,8 @@ const Start: React.FC<StartProps> = ({ handleRegistration, isRegistered }) => {
                         required
                     />
                 </label>
-                <br />
-                <button type="submit">Submit</button>
+                <br/>
+                <button className={s.button} type="submit">Submit</button>
             </form>
         </div>
     );

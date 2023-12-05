@@ -20,8 +20,8 @@ ul{
 li{
     list-style: none;
     padding-left: 15px;
-
-
+    margin: 0 20px;
+    font-size: 40px;
 }
 
 li a{
@@ -40,3 +40,4 @@ a:hover{
     text-decoration: underline;
 }
 
+img { margin: 0 10px}

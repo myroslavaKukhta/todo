@@ -3,6 +3,7 @@ import { FilterValuesType } from './App';
 import s from './DayTodo.module.css';
 import { saveDataToLocalStorage, loadDataFromLocalStorage } from './localStorageUtils';
 
+
 export interface TaskType {
     id: string;
     title: string;
@@ -36,7 +37,7 @@ const DayTodo: React.FC<DayTodoProps> = ({
     const addTaskHandler = () => {
         if (taskTitle.trim() === '') {
             alert('Title is required');
-            return; // Вийти з функції, якщо тайтл порожній
+            return;
         }
 
         addTask(taskTitle.trim());
@@ -54,9 +55,28 @@ const DayTodo: React.FC<DayTodoProps> = ({
         setError(null);
     };
 
-    const encryptAndSaveHandler = () => {
-        saveDataToLocalStorage(storageKey, { tasks: tasksState, title: taskTitle });
+    // const encryptAndSaveHandler = () => {
+    //     saveDataToLocalStorage(storageKey, { tasks: tasksState, title: taskTitle });
+    // };
+
+    const saveData = () => {
+        localStorage.setItem('taskValue', taskTitle.toString());
     };
+
+    // Функція для видалення даних з localStorage
+    const clearData = () => {
+        localStorage.removeItem('taskValue');
+        setTaskTitle(''); // Скидання лічильника
+    };
+
+    // Відновлення даних при завантаженні компоненти
+    useEffect(() => {
+        const savedTask = localStorage.getItem('taskValue');
+        if (savedTask !== null) {
+            setTaskTitle((savedTask));
+        }
+    }, []);
+
 
     const loadDataHandler = () => {
         const savedData = loadDataFromLocalStorage(storageKey);
@@ -109,11 +129,11 @@ const DayTodo: React.FC<DayTodoProps> = ({
                 <button onClick={addTaskHandler} className={s.buttonAddTodo}>
                     +
                 </button>
-                <button onClick={encryptAndSaveHandler} className={s.button}>
-                    Encrypt & Save
+                <button onClick={saveData} className={s.button}>
+                    Save
                 </button>
                 <button onClick={loadDataHandler} className={s.button}>
-                    Load Data
+                    Load
                 </button>
                 <ul className={s.taskList}>
                     {tasksState.map((task) => (

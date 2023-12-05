@@ -6,6 +6,8 @@ import WeekTodo from './WeekTodo';
 import Start from './Start';
 import { saveDataToLocalStorage, loadDataFromLocalStorage } from './localStorageUtils';
 import { v1 } from 'uuid';
+import Home from "./Home";
+import News from "./News";
 
 export type FilterValuesType = 'all' | 'active' | 'completed';
 
@@ -15,11 +17,17 @@ interface Task {
     isDone: boolean;
 }
 
+interface Photo {
+    id: number;
+    url: string;
+}
+
 function App() {
     const [isRegistered, setIsRegistered] = useState(false);
     const [tasks, setTasks] = useState<Task[]>([]);
     const [filter, setFilter] = useState<FilterValuesType>('all');
     const [tasksForTodoList, setTasksForTodoList] = useState<Task[]>(tasks);
+
 
     const addTask = (title: string) => {
         let task: Task = { id: v1(), title: title, isDone: false };
@@ -63,9 +71,6 @@ function App() {
     };
 
 
-
-
-
     const handleRegistration = () => {
         setIsRegistered(true);
     };
@@ -75,9 +80,15 @@ function App() {
             <div className="App">
                 <NavBar />
                 <Routes>
-                    <Route path="/start" element={<Start handleRegistration={handleRegistration} isRegistered={isRegistered} />} />
+                    <Route path="/" element={<Start handleRegistration={handleRegistration} isRegistered={isRegistered} />} />
                     {isRegistered && (
                         <>
+                        <Route
+                            path="/home"
+                            element={
+                                <Home/>
+                            }
+                            />
                             <Route
                                 path="/week"
                                 element={
@@ -102,6 +113,12 @@ function App() {
                                         changeFilter={changeFilter}
                                         changeTaskStatus={changeTaskStatus}
                                     />
+                                }
+                            />
+                            <Route
+                                path="/news"
+                                element={
+                                    <News />
                                 }
                             />
                         </>
