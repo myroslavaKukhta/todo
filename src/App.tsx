@@ -19,40 +19,52 @@ function App() {
     const [isRegistered, setIsRegistered] = useState(false);
     const [tasks, setTasks] = useState<Task[]>([]);
     const [filter, setFilter] = useState<FilterValuesType>('all');
-
-    let tasksForTodoList: Task[] = tasks;
-
-    if (filter === 'active') {
-        tasksForTodoList = tasks.filter((task) => !task.isDone);
-    }
-
-    if (filter === 'completed') {
-        tasksForTodoList = tasks.filter((task) => task.isDone);
-    }
+    const [tasksForTodoList, setTasksForTodoList] = useState<Task[]>(tasks);
 
     const addTask = (title: string) => {
         let task: Task = { id: v1(), title: title, isDone: false };
-        let newTasks = [task, ...tasks];
+        let newTasks = [task, ...tasksForTodoList];
         setTasks(newTasks);
         saveDataToLocalStorage('tasks', newTasks);
+        setTasksForTodoList(newTasks);
     };
 
     const removeTask = (id: string) => {
-        let filteredTasks = tasks.filter((task) => task.id !== id);
+        let filteredTasks = tasksForTodoList.filter((task) => task.id !== id);
         setTasks(filteredTasks);
         saveDataToLocalStorage('tasks', filteredTasks);
+        setTasksForTodoList(filteredTasks);
+    };
+
+    const filterTasks = (value: FilterValuesType) => {
+        if (value === 'all') {
+            setTasksForTodoList(tasks);
+        } else if (value === 'active') {
+            setTasksForTodoList(tasks.filter((task) => !task.isDone));
+        } else if (value === 'completed') {
+            setTasksForTodoList(tasks.filter((task) => task.isDone));
+        }
     };
 
     const changeFilter = (value: FilterValuesType) => {
         setFilter(value);
+        filterTasks(value);
     };
 
     const changeTaskStatus = (taskId: string) => {
-        setTasks((prevTasks) =>
-            prevTasks.map((task) => (task.id === taskId ? { ...task, isDone: !task.isDone } : task))
-        );
-        saveDataToLocalStorage('tasks', tasks);
+        setTasks((prevTasks) => {
+            const updatedTasks = prevTasks.map((task) =>
+                task.id === taskId ? { ...task, isDone: !task.isDone } : task
+            );
+            saveDataToLocalStorage('tasks', updatedTasks);
+            filterTasks(filter);
+            return updatedTasks;
+        });
     };
+
+
+
+
 
     const handleRegistration = () => {
         setIsRegistered(true);

@@ -7,7 +7,7 @@ export const NavBar = () => {
         <nav>
             <ul className={s.navList}>
                 <li>
-                    <NavLink to="/start">Start</NavLink>
+                    <NavLink to="/start">Login</NavLink>
                 </li>
                 <li>
                     <NavLink to="/week">Week</NavLink>

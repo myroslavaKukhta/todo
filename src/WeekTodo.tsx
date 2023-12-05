@@ -14,13 +14,13 @@ interface WeekTodoProps {
 }
 
 const WeekTodo: React.FC<WeekTodoProps> = ({
-                                               title,
-                                               tasks,
-                                               addTask,
-                                               removeTask,
-                                               changeFilter,
-                                               changeTaskStatus,
-                                           }) => {
+                                                title,
+                                                tasks,
+                                                addTask,
+                                                removeTask,
+                                                changeFilter,
+                                                changeTaskStatus,
+                                            }) => {
     const days: string[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
     const [dailyTasks, setDailyTasks] = useState<{ [key: string]: TaskType[] }>({});
